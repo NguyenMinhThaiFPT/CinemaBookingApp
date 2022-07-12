@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+@{
+    int index = -1;
+}
+
+<h1>Index</h1>
+
+
+@for (var i = 0; i < 10; i++)
+{
+    @for (var j = 0; j < 10; j++)
+    {
+
+        index = j * 10 + i;
+        string isBooked = Model[index];
+        <input disabled="disabled" id="AllowRating" type="checkbox" @(isBooked == "1" ? "checked" : "") />
+    }
+    <br />
+}
+                    <a asp-action="Create" asp-route-id="@ViewBag.showId">Create new</a>
+                    <p>The number of bookings: @ViewBag.Count</p>
+
+<br />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Amount
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (Booking item in ViewBag.listBook) {
+        <tr>
+            <td>
+                @item.Name
+            </td>
+            <td>
+                @item.Amount
+            </td>
+
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.BookingId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.BookingId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.BookingId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

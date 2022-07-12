@@ -1,0 +1,98 @@
+﻿@model SE1617_WebMVC.Models.Booking
+<style>
+ .form-group input{
+     width: fit-content !important;
+ }
+</style>
+@{
+    ViewData["Title"] = "Edit";
+}
+@{
+    int index = -1;
+    Show s = (Show)ViewBag.Show;
+    string []booked = ViewBag.booked;
+}
+
+<h1>Create</h1>
+
+
+@for (var i = 0; i < 10; i++)
+{
+    @for (var j = 0; j < 10; j++)
+    {
+
+        index = j * 10 + i;
+        if (Model.SeatStatus[index] == '1')
+        {
+            <input value="@(j * 10 + i)" type="checkbox" checked="checked" />
+        }
+        else if (booked[index] == "1")
+        {
+            <input value="@(j * 10 + i)" disabled="disabled" type="checkbox" checked="checked" />
+        }
+        else
+        {
+            <input value="@(j * 10 + i)" type="checkbox" />
+        }
+    }
+    <br />
+}
+<form asp-action="Edit">
+    @if (s != null)
+    {
+        <input hidden name="ShowId" value="@s.ShowId" />
+        <input hidden name="FilmId" value="@s.FilmId" />
+    }
+ <input type="hidden" asp-for="BookingId" />
+    <div class="form-group">
+        <label>Name</label> <br />
+        <input class="form-group" type="text" name="Name" value="@Model.Name"/>
+    </div>
+    <div class="form-group">
+        <label>Amount</label> <br />
+        <input value="@Model.Amount" readonly="readonly" class="text-box single-line readonly disabled amount" name="Amount" />
+    </div>
+    <input hidden class="form-group seat" type="text" name="SeatStatus" value="@Model.SeatStatus" />
+
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index" asp-route-id="@s.ShowId">Back to List</a>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+      var price = parseInt('@s.Price');
+      var amount = document.querySelector(".amount");
+      function replaceStrAtIndex( str, index, letter ){
+      let modifiedStr = [...str];
+      modifiedStr[index] = letter;
+      return modifiedStr.join('')
+    }
+    var markedCheckbox = document.querySelectorAll('input[type="checkbox"]:not(:disabled)');
+        markedCheckbox.forEach( (item) => {
+          item.addEventListener("click", ()=>{
+
+              var seat = document.querySelector(".seat");
+              if(item.checked == true){
+               console.log(seat.value)
+               seat.value = replaceStrAtIndex(seat.value, item.value, '1');
+               console.log(seat.value)
+               var currentPrice = parseInt(amount.value) + price;
+               amount.value = currentPrice;
+              }
+              else {
+                console.log(seat.value)
+                 seat.value = replaceStrAtIndex(seat.value, item.value, '0');
+                console.log(seat.value)
+                var currentPrice = parseInt(amount.value) - price;
+               amount.value = currentPrice;
+              }
+          })
+      });
+
+
+</script>
+

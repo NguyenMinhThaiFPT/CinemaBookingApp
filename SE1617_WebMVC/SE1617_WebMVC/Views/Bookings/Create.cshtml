@@ -1,0 +1,82 @@
+﻿@{
+    ViewData["Title"] = "Create";
+}
+@{
+    int index = -1;
+    int checboxNumber = 0;
+    Show s = (Show)ViewBag.Show;
+}
+
+<h1>Create</h1>
+
+
+@for (var i = 0; i < 10; i++)
+{
+    @for (var j = 0; j < 10; j++)
+    {
+
+        index = j * 10 + i;
+        string isBooked = Model[index];
+        <input value="@(j * 10 + i)" disabled="@(isBooked == "1" ? "disabled" : null)" type="checkbox" @(isBooked == "1" ? "checked" : "") />
+    }
+    <br />
+}
+<form asp-action="Create">
+    @if (s != null)
+    {
+        <input hidden name="ShowId" value="@s.ShowId" />
+        <input hidden name="FilmId" value="@s.FilmId" />
+    }
+
+    <div class="form-group">
+        <label>Name</label> <br />
+        <input class="form-group" type="text" name="Name" />
+    </div>
+    <div class="form-group">
+        <label>Amount</label> <br />
+        <input value="0" class="form-control text-box single-line readonly disabled amount" name="Amount" />
+    </div>
+    <input hidden class="form-group seat" type="text" name="SeatStatus" value="@ViewBag.seat" />
+
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index" asp-route-id="@s.ShowId">Back to List</a>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+      var price = parseInt('@s.Price');
+      var amount = document.querySelector(".amount");
+      function replaceStrAtIndex( str, index, letter ){
+      let modifiedStr = [...str];
+      modifiedStr[index] = letter;
+      return modifiedStr.join('')
+    }
+    var markedCheckbox = document.querySelectorAll('input[type="checkbox"]:not(:disabled)');
+        markedCheckbox.forEach( (item) => {
+          item.addEventListener("click", ()=>{
+
+              var seat = document.querySelector(".seat");
+              if(item.checked == true){
+               console.log(seat.value)
+               seat.value = replaceStrAtIndex(seat.value, item.value, '1');
+               console.log(seat.value)
+               var currentPrice = parseInt(amount.value) + price;
+               amount.value = currentPrice;
+              }
+              else {
+                console.log(seat.value)
+                 seat.value = replaceStrAtIndex(seat.value, item.value, '0');
+                console.log(seat.value)
+                var currentPrice = parseInt(amount.value) - price;
+               amount.value = currentPrice;
+              }
+          })
+      });
+    
+
+</script>
+

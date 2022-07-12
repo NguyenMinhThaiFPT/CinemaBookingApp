@@ -1,0 +1,104 @@
+﻿@using Microsoft.AspNetCore.Http
+@model IEnumerable<SE1617_WebMVC.Models.Show>
+
+
+@{
+    ViewData["Title"] = "Index";
+    string username = Context.Session.GetString("username");
+}
+<style>
+    p:hover {
+        color: #0056b3;
+        text-decoration: underline;
+    }
+
+    p {
+        width: fit-content;
+        cursor: pointer;
+    }
+</style>
+<h1>Index</h1>
+
+<form class="searchForm" asp-action="Search" method="get">
+    Date: <input name="date" type="date" value="@ViewBag.date" /> <br />
+    Room: <select name="RoomId" asp-items="ViewBag.RoomId"></select> <br />
+    Film: <select class="filmid" name="FilmId" asp-items="ViewBag.FilmId"></select> <br />
+    <input type="submit" value="Search" class="btn btn-primary" />
+
+</form>
+
+<p style="color:#0366d6;" onclick="search()">Create new</p>
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ShowDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Slot)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Film)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Room)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ShowDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Slot)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Film.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Room.Name)
+                </td>
+                <td>
+                    <a href="/Bookings/Index/@item.ShowId">Booking</a> 
+                    @if (username != null) {
+                        <a asp-action="Edit" asp-route-id="@item.ShowId">Edit</a>
+                        }
+                    <a asp-action="Details" asp-route-id="@item.ShowId">Details</a> 
+                    @if(username != null){
+                    <a asp-action="Delete" asp-route-id="@item.ShowId">Delete</a> 
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    function search(){
+        var film = document.querySelector(".filmid");
+        film.parentNode.removeChild(film);
+
+        document.querySelector(".searchForm").method = "get";
+        document.querySelector(".searchForm").action = "/Shows/Create";
+        document.querySelector(".searchForm").submit();
+    }
+</script>
